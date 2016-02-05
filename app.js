@@ -14,7 +14,8 @@ app.get("/campgrounds", function(req, res){
 	var campgrounds = [
 		{name: "Salmon Creek", image: "http://photosforclass.com/download/7962474612"},
 		{name: "Granite Hill", image: "http://photosforclass.com/download/215827008"},
-		{name: "Mountain Goat's Rest", image: "http://photosforclass.com/download/6234565071"}
+		{name: "Mountain Goat's Rest", image: "http://photosforclass.com/download/6234565071"},
+		{name: "Really Cool Campg", image: "http://www.makeyourdayhere.com/ImageRepository/Document?documentID=51"}
 	]
 res.render("campgrounds", {campgrounds:campgrounds});
 });
