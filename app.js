@@ -51,7 +51,7 @@ res.render("new");
 
 
 
-//Listener for server
+//Listener for servers
 app.listen("3000", function(){
 	console.log("The YelpCamp server has started!");
 });
