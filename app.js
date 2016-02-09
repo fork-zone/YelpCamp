@@ -1,10 +1,26 @@
 var express = require("express");
 var app = express();
 var bodyParser = require("body-parser");
+// var MongoClient = require('mongodb').MongoClient;  for Mongo DB
+var assert = require('assert');
+
+
 app.use(bodyParser.urlencoded({extended:true})); //memorize this line
 
 //database:
+//Mongo
 
+// var url = 'mongodb://tonybrackins:xxxtasy1@ds060478.mongolab.com:60478/tonymongo';
+// MongoClient.connect(url, function(err, db) {
+//   assert.equal(null, err);
+//   console.log("Connected correctly to Mongo server.");
+//   db.close();
+// });
+
+
+//Mongoose
+// var uri = 'mongodb://tonybrackins:xxxtasy1@ds060478.mongolab.com:60478/tonymongo';
+// global.db = mongoose.createConnection(uri);
 var campgrounds = [
 		{name: "Salmon Creek", image: "http://photosforclass.com/download/7962474612"},
 		{name: "Granite Hill", image: "http://photosforclass.com/download/215827008"},
