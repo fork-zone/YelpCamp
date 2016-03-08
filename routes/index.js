@@ -62,12 +62,6 @@ router.get("/logout", function(req, res){
 	res.redirect("/campgrounds");
 });
 
-function isLoggedIn(req,res,next){
-	if(req.isAuthenticated()){
-		return next();
-	} else{
-		res.redirect("/login");
-	}
-}
+// middleware has been moved to middleware directory
 
 module.exports = router;
