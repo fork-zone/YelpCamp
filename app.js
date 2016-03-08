@@ -4,6 +4,7 @@ var express     = require("express"),
     mongoose    = require("mongoose"),
     passport    = require("passport"),
     LocalStrategy = require("passport-local"),
+    methodOverride = require('method-override');
     Campground  = require("./models/campground"),
     Comment     = require("./models/comment"),
     User        = require("./models/user"),
@@ -27,7 +28,7 @@ app.use(express.static(__dirname + "/public"));
 console.log("Directory Name: " + __dirname);
 //Seed the database
 // seedDB(); 
-
+app.use(methodOverride("_method"));
 // PASSPORT CONFIGURATION
 app.use(require("express-session")({
 	 secret: "Once again Rusty wins cutest dog!",
