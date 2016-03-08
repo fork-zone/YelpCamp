@@ -20,7 +20,16 @@
     "body-parser": "^1.14.2",
     "ejs": "^2.4.1",
     "express": "^4.13.4",
+    "express-session": "^1.13.0",
+    "fs": "0.0.2",
+    "http": "0.0.0",
     "mongodb": "^2.1.6",
-    "mongoose": "^4.4.3"
+    "mongoose": "^4.4.3",
+    "multer": "^1.1.0",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^4.0.0",
+    "user": "0.0.0",
+    "util": "^0.10.3"
   }
 }

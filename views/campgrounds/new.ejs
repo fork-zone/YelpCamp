@@ -1,4 +1,4 @@
-<% include partials/header%>
+<% include ../partials/header%>
 <div class="container">
 <div class="row" >
 	<h1 style="text-align: center;">Create a new campground</h1>
@@ -22,5 +22,13 @@
 	
 	</div>
 </div>
-<% include partials/footer%>
+
+<form action="/upload" method="post" enctype="multipart/form-data">
+  <input type="text" name="title"/>
+  <input type="file" multiple="multiple" name="image"/>
+  <button type="submit" value="Upload">Upload File</button>
+</form>
+<% include ../partials/footer%>
+
+
 

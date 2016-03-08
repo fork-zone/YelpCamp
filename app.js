@@ -1,146 +1,69 @@
-var express		= require("express"),
-	app 		= express(),
-	bodyParser 	= require("body-parser"),
-	mongoose 	= require("mongoose")  
+var express     = require("express"),
+    app         = express(),
+    bodyParser  = require("body-parser"),
+    mongoose    = require("mongoose"),
+    passport    = require("passport"),
+    LocalStrategy = require("passport-local"),
+    Campground  = require("./models/campground"),
+    Comment     = require("./models/comment"),
+    User        = require("./models/user"),
+    seedDB      = require("./seeds")
+
+
+    //ROUTERS
+    //requiring routes
+var commentRoutes 		= require("./routes/comments"),
+	camgroundRoutes 	= require("./routes/campgrounds"),
+	indexRoutes 		= require("./routes/index");
+
+	 
 
 mongoose.connect("mongodb://tonybrackins:xxxtasy1@ds061365.mongolab.com:61365/yelp_camp");
-
-// var MongoClient = require('mongodb').MongoClient;  for Mongo DB
-// var assert = require('assert');
-
-
-
-
 app.use(bodyParser.urlencoded({extended:true})); //memorize this line
-
 // Set View Engine to EJS
 app.set("view engine", "ejs");
+// Connect to public for styles etc
+app.use(express.static(__dirname + "/public"));
+console.log("Directory Name: " + __dirname);
+//Seed the database
+// seedDB(); 
 
-//SCHEMA SETUP
-var campgroundSchema = new mongoose.Schema({
-	name: String,
-	image: String,
-	description: String
-});
-//SCHEMA SETUP
-	// Model Setup
-var Campground = mongoose.model("Campground", campgroundSchema);;
+// PASSPORT CONFIGURATION
+app.use(require("express-session")({
+	 secret: "Once again Rusty wins cutest dog!",
+    resave: false,
+    saveUninitialized: false
 
-// Campground.create(
-// 	{
-// 		name: "Granite Hill", 
-// 		image: "http://photosforclass.com/download/215827008"
+}));
 
-// 	}, function(err, camp){
-// 		if(err) {
-// 			console.log("we caught an error");
-// 		} else {
-// 			console.log("we just created");
-// 			console.log(camp);
-// 		}
-// 	});
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
-//database:
-//Mongo
-
-// var url = 'mongodb://tonybrackins:xxxtasy1@ds060478.mongolab.com:60478/tonymongo';
-// MongoClient.connect(url, function(err, db) {
-//   assert.equal(null, err);
-//   console.log("Connected correctly to Mongo server.");
-//   db.close();
-// });
-
-
-//Mongoose
-// var uri = 'mongodb://tonybrackins:xxxtasy1@ds060478.mongolab.com:60478/tonymongo';
-// global.db = mongoose.createConnection(uri);
-// var campgrounds = [
-// 		{name: "Salmon Creek", image: "http://photosforclass.com/download/7962474612"},
-// 		{name: "Granite Hill", image: "http://photosforclass.com/download/215827008"},
-// 		{name: "Mountain Goat's Rest", image: "http://photosforclass.com/download/6234565071"},
-// 		{name: "Really Cool Campg", image: "http://www.makeyourdayhere.com/ImageRepository/Document?documentID=51"}
-// 	]
-
-
-//Homepage
-app.get("/", function(req, res){
-res.render("landing");
+app.use(function(req, res, next){
+	res.locals.currentUser = req.user;
+	next();
 });
 
-//Campgrounds page
+//middleware that will run for every single route because of res.locals
 
-// Index - Show all campgrounds
-app.get("/campgrounds", function(req, res){
-	//get all campgrounds from DB
-	Campground.find({}, function(err, allCampgrounds){
-		if(err){
-			console.log("bruhh, we got a problem");
-		} else{
-			console.log("Yo, we just FOUND this: ");
-			console.log(allCampgrounds);
-			res.render("index", {campgrounds: allCampgrounds});
-		}
-	});
-	
-
-
-});
-//CREATE 
-app.post("/campgrounds", function(req, res) {
-	
-	//get data from form and add to campgrounds array
-	var name = req.body.name;
-	var image = req.body.image;
-	var desc = req.body.description;
-	var newCampground = {name:name, image:image, description: desc}
-	// campgrounds.push(newCampground);
-	// create a new campground and save to database
-	Campground.create(newCampground, function(err,newlycreated){
-		if(err){
-		console.log("yo, got an error: " + err);
-		} else {
-			console.log("yo, just created: " + newlycreated);
-			res.redirect("/campgrounds");
-		}
-	});
-	//redirect back to campgrounds page
-	
+app.use(function(req,res,next){
+	res.locals.currentUser = req.user;
+	next();
 });
 
-// Add new campground form
-
-//NEW
-
-app.get("/campgrounds/new", function(req, res){
-res.render("new");
-});
+app.use("/", indexRoutes);
+app.use("/campgrounds",camgroundRoutes);
+app.use("/campgrounds/:id/comments",commentRoutes);
 
 
-//SHOW - shows more info about one campground
-app.get("/campgrounds/:id", function(req, res){
-
-	//find the camground with provided ID
-	Campground.findById(req.params.id, function(err, foundCampground){
-		if(err){
-			console.log(err);
-		} else {
-			//render show template witht that campground
-			res.render("show", {campground: foundCampground});
-		}
-	});
-	
-});
-
-//messing with OOP
-// var campground = function(campname, image) {
-// 	this.campname = campname;
-// 	this.campimage = campimage;
-// }
 
 
 
 
 //Listener for servers
-app.listen("3000", function(){
+app.listen("3001", function(){
 	console.log("The YelpCamp server has started!");
 });
