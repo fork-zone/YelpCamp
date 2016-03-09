@@ -2,6 +2,7 @@ var express     = require("express"),
     app         = express(),
     bodyParser  = require("body-parser"),
     mongoose    = require("mongoose"),
+    flash       = require('connect-flash'),
     passport    = require("passport"),
     LocalStrategy = require("passport-local"),
     methodOverride = require('method-override');
@@ -16,6 +17,9 @@ var express     = require("express"),
 var commentRoutes 		= require("./routes/comments"),
 	camgroundRoutes 	= require("./routes/campgrounds"),
 	indexRoutes 		= require("./routes/index");
+//to get an environment variable: 
+//from command line; export PASSWORD="password"
+   console.log(process.env.PASSWORD);
 
 	 
 
@@ -29,6 +33,7 @@ console.log("Directory Name: " + __dirname);
 //Seed the database
 // seedDB(); 
 app.use(methodOverride("_method"));
+app.use(flash());
 // PASSPORT CONFIGURATION
 app.use(require("express-session")({
 	 secret: "Once again Rusty wins cutest dog!",
@@ -45,6 +50,8 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use(function(req, res, next){
 	res.locals.currentUser = req.user;
+    res.locals.error = req.flash("error");
+    res.locals.success = req.flash("success");
 	next();
 });
 
